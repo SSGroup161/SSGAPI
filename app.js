@@ -3,7 +3,7 @@ require("dotenv").config();
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const cors = require("cors");
-// const Router = require("./src/router");
+const Router = require("./src/router");
 const helmet = require("helmet");
 
 const port = 4000;
@@ -24,7 +24,7 @@ app.get("/", (req, res) => {
     res.status(200).json({ status: 200, message: "server running" });
 });
 
-// app.use(Router);
+app.use(Router);
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
