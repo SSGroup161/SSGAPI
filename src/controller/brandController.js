@@ -2,9 +2,11 @@ const { getBrand } = require("../model/brandModel");
 require("dotenv").config();
 
 const brandController = {
-    getData: async (req, res, next) => {
+    getDataById: async (req, res, next) => {
         try {
-            const dataBrand = await getBrand();
+            const { id } = req.params;
+
+            const dataBrand = await getBrand(id);
             console.log("dataBrand");
             console.log(dataBrand);
             res.status(200).json({

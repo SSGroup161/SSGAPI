@@ -65,3 +65,5 @@ CREATE TABLE product (
     updated_at TIMESTAMP NULL,
     deleted_at TIMESTAMP NULL
 );
+
+SELECT * FROM brand WHERE id='0071599e-e419-4577-a466-b7e7c777c4a5';
