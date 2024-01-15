@@ -2,6 +2,7 @@ const { postContact } = require("../model/contactModel");
 require("dotenv").config();
 const nodemailer = require("nodemailer");
 const xss = require("xss");
+const { v4: uuidv4 } = require("uuid");
 
 // const transporter = nodemailer.createTransport({
 //     service: "gmail",
@@ -99,7 +100,7 @@ const contactController = {
     postDataContact: async (req, res, next) => {
         try {
             const { name, email, message } = req.body;
-            const uuid = crypto.randomUUID();
+            const uuid = uuidv4();
 
             console.log("post data");
             console.log(name, email, message);
