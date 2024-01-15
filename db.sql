@@ -66,4 +66,17 @@ CREATE TABLE product (
     deleted_at TIMESTAMP NULL
 );
 
+CREATE TABLE contact (
+    id VARCHAR(255) PRIMARY KEY,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    name VARCHAR(255),
+    email VARCHAR(255),
+    message VARCHAR(255)
+);
+
 SELECT * FROM brand WHERE id='0071599e-e419-4577-a466-b7e7c777c4a5';
+
+ALTER TABLE brand
+ADD COLUMN link_web VARCHAR(255);
+
+SELECT * FROM brand;

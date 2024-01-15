@@ -1,6 +1,6 @@
 const pool = require("../config/db");
 
-const getBrand = async (id) => {
+const getBrandById = async (id) => {
     console.log("model getBrand");
     try {
         const [result] = await pool.query(
@@ -12,4 +12,4 @@ const getBrand = async (id) => {
     }
 };
 
-module.exports = { getBrand };
+module.exports = { getBrandById };

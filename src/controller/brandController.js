@@ -1,4 +1,4 @@
-const { getBrand } = require("../model/brandModel");
+const { getBrandById } = require("../model/brandModel");
 require("dotenv").config();
 
 const brandController = {
@@ -6,7 +6,7 @@ const brandController = {
         try {
             const { id } = req.params;
 
-            const dataBrand = await getBrand(id);
+            const dataBrand = await getBrandById(id);
             console.log("dataBrand");
             console.log(dataBrand);
             res.status(200).json({
