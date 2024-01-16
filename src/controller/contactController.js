@@ -4,17 +4,6 @@ const nodemailer = require("nodemailer");
 const xss = require("xss");
 const { v4: uuidv4 } = require("uuid");
 
-// const transporter = nodemailer.createTransport({
-//     service: "gmail",
-//     host: "smtp.gmail.com",
-//     secure: false,
-//     port: 587,
-//     auth: {
-//         user: process.env.EMAILGMAIL,
-//         pass: process.env.PASS,
-//     },
-// });
-
 const transporter = nodemailer.createTransport({
     service: "hostinger",
     host: "smtp.hostinger.com",
@@ -24,6 +13,7 @@ const transporter = nodemailer.createTransport({
         user: process.env.EMAILCOMPANY,
         pass: process.env.PASSCOMPANY,
     },
+    connectionTimeout: 30000,
 });
 
 const ssglogo =
@@ -128,7 +118,7 @@ const contactController = {
             transporter.sendMail(mailOptions, (error, info) => {
                 if (error) {
                     console.error("Gagal mengirim email: ", error);
-                    res.status(500).json({
+                    return res.status(500).json({
                         status: 500,
                         message: "Failed to send email",
                     });
