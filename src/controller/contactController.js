@@ -5,15 +5,15 @@ const xss = require("xss");
 const { v4: uuidv4 } = require("uuid");
 
 const transporter = nodemailer.createTransport({
-    service: "hostinger",
-    host: "smtp.hostinger.com",
-    secure: true,
-    port: 465,
+    service: "gmail",
+    host: "smtp.gmail.com",
+    secure: false,
+    port: 587,
     auth: {
-        user: process.env.EMAILCOMPANY,
-        pass: process.env.PASSCOMPANY,
+        user: process.env.EMAILGMAIL,
+        pass: process.env.PASSGMAIL,
     },
-    connectionTimeout: 30000,
+    connectionTimeout: 10000,
 });
 
 const ssglogo =
