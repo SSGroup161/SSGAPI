@@ -7,8 +7,8 @@ const { v4: uuidv4 } = require("uuid");
 const transporter = nodemailer.createTransport({
     service: "gmail",
     host: "smtp.gmail.com",
-    secure: false,
-    port: 587,
+    secure: true,
+    port: 465,
     auth: {
         user: process.env.EMAILGMAIL,
         pass: process.env.PASSGMAIL,
