@@ -15,7 +15,9 @@ const getArticleById = async (id) => {
 const getArticle = async () => {
     console.log("model getArticle");
     try {
-        const [result] = await pool.query(`SELECT * FROM article`);
+        const [result] = await pool.query(
+            `SELECT * FROM article ORDER BY created_at DESC`
+        );
         return result;
     } catch (err) {
         throw err;
