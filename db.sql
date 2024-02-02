@@ -80,3 +80,33 @@ ALTER TABLE brand
 ADD COLUMN link_web VARCHAR(255);
 
 SELECT * FROM brand;
+
+ALTER TABLE brand
+ADD COLUMN video_bg VARCHAR(255);
+
+DELETE FROM contact;
+
+ALTER TABLE article
+ADD COLUMN public_id VARCHAR(255);
+
+ALTER TABLE brand
+CHANGE COLUMN link_tokped link_whatsapp VARCHAR(255);
+
+DROP TABLE article;
+
+CREATE TABLE article (
+    id VARCHAR(255),
+    title VARCHAR(255),
+    creator VARCHAR(255),
+    day VARCHAR(255),
+    date VARCHAR(255),
+    link_img VARCHAR(255),
+    caption_img VARCHAR(255),
+    description VARCHAR(255),
+    place VARCHAR(255),
+    company VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+
+ALTER TABLE article
+DROP COLUMN company;
