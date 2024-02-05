@@ -110,3 +110,6 @@ CREATE TABLE article (
 
 ALTER TABLE article
 DROP COLUMN company;
+
+ALTER TABLE article
+MODIFY COLUMN `description` VARCHAR(50000);

@@ -5,6 +5,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 const Router = require("./src/router");
 const helmet = require("helmet");
+const path = require("path");
 
 const port = 4000;
 const app = express();
@@ -25,6 +26,12 @@ app.get("/", (req, res) => {
 });
 
 app.use(Router);
+
+app.use(express.static(path.join(__dirname, "build")));
+
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "build", "index.html"));
+});
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
