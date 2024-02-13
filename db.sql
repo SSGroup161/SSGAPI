@@ -23,19 +23,12 @@ CREATE TABLE brand (
 
 CREATE TABLE users (
     id VARCHAR(255) PRIMARY KEY,
-    authorize VARCHAR(255),
     username VARCHAR(255),
     email VARCHAR(255),
     password VARCHAR(255),
-    idssg VARCHAR(255),
     role VARCHAR(255),
     notelp INT(255),
-    tanggal_lahir DATE,
-    gender VARCHAR(15),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NULL,
-    deleted_at TIMESTAMP NULL,
-    status VARCHAR(15)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE login_session (
@@ -113,3 +106,7 @@ DROP COLUMN company;
 
 ALTER TABLE article
 MODIFY COLUMN `description` VARCHAR(50000);
+
+DROP TABLE users;
+
+SELECT * FROM users;
