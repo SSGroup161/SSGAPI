@@ -69,15 +69,16 @@ const postArticle = async (data) => {
 
 const deleteById = async (id) => {
     console.log("delete article by id ->", id);
-    return new Promise((resolve, reject) => {
-        pool.query(`DELETE FROM article WHERE id = ?`, [id], (err, result) => {
-            if (!err) {
-                resolve(result);
-            } else {
-                reject(err);
-            }
-        });
-    });
+    try {
+        const [result] = await pool.execute(
+            `DELETE FROM article WHERE id = ?`,
+            [id]
+        );
+        return result;
+    } catch (err) {
+        console.error("Error in deleteById:", err);
+        throw err;
+    }
 };
 
 module.exports = { getArticleById, getArticle, postArticle, deleteById };

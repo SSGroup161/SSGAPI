@@ -133,46 +133,57 @@ const brandController = {
             });
         }
     },
-    deleteDataById: async (req, res, next) => {
-        try {
-            const { id } = req.params;
+    deleteDataById: (req, res, next) => {
+        const { id } = req.params;
 
-            if (
-                !id ||
-                !id.match(
-                    /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/
-                )
-            ) {
-                return res
-                    .status(400)
-                    .json({ status: 400, message: "Invalid ID format" });
-            }
-
-            const dataArticle = await getArticleById(id);
-            if (!dataArticle) {
-                return res
-                    .status(404)
-                    .json({ status: 404, message: "Article not found" });
-            }
-
-            await cloudinary.uploader.destroy(dataArticle.public_id);
-
-            const result = await deleteById(id);
-            if (!result || result.affectedRows === 0 || result.rowCount === 0) {
-                // Sesuaikan dengan DBMS yang digunakan
-                return res
-                    .status(404)
-                    .json({ status: 404, message: "Failed to delete article" });
-            }
-
-            res.status(200).json({
-                status: 200,
-                message: "Article deleted successfully",
-            });
-        } catch (err) {
-            console.error(err);
-            res.status(500).json({ status: 500, message: err.message });
+        if (
+            !id ||
+            !id.match(
+                /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/
+            )
+        ) {
+            return res
+                .status(400)
+                .json({ status: 400, message: "Invalid ID format" });
         }
+
+        getArticleById(id)
+            .then((dataArticle) => {
+                if (!dataArticle) {
+                    return res
+                        .status(404)
+                        .json({ status: 404, message: "Article not found" });
+                }
+
+                // Langkah 1: Hapus gambar di Cloudinary
+                return cloudinary.uploader.destroy(dataArticle.public_id);
+            })
+            .then(() => {
+                // Langkah 2: Hapus artikel dari database
+                return deleteById(id);
+            })
+            .then((result) => {
+                if (
+                    !result ||
+                    result.affectedRows === 0 ||
+                    result.rowCount === 0
+                ) {
+                    throw new Error("Failed to delete article");
+                }
+
+                // Langkah 3: Kirim respons sukses setelah semua operasi selesai
+                res.status(200).json({
+                    status: 200,
+                    message: "Article deleted successfully",
+                });
+            })
+            .catch((err) => {
+                console.error(err);
+                res.status(500).json({
+                    status: 500,
+                    message: err.message || "Internal server error",
+                });
+            });
     },
 };
 
