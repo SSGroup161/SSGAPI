@@ -7,10 +7,11 @@ const {
     deleteDataById,
 } = require("../controller/articleController");
 const upload = require("../helper/uploadCloudinary");
+const { Protect } = require("../middleware/Protect");
 
 router.get("/:id", getDataById);
 router.get("/", getData);
-router.post("/", upload.single("link_img"), postData);
-router.delete("/:id", deleteDataById);
+router.post("/", Protect, upload.single("link_img"), postData);
+router.delete("/:id", Protect, deleteDataById);
 
 module.exports = router;
