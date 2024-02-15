@@ -3,11 +3,16 @@ const pool = require("../config/db");
 const getArticleById = async (id) => {
     console.log("model getArticleById");
     try {
-        const [result] = await pool.query(
-            `SELECT * FROM article WHERE id='${id}'`
-        );
-        return result;
+        const query = "SELECT * FROM article WHERE id = ?";
+        const [rows] = await pool.execute(query, [id]);
+
+        if (rows.length === 0) {
+            return null;
+        }
+
+        return rows[0];
     } catch (err) {
+        console.error("Error in getArticleById:", err);
         throw err;
     }
 };
@@ -15,7 +20,7 @@ const getArticleById = async (id) => {
 const getArticle = async () => {
     console.log("model getArticle");
     try {
-        const [result] = await pool.query(
+        const [result] = await pool.execute(
             `SELECT * FROM article ORDER BY created_at DESC`
         );
         return result;
@@ -62,4 +67,17 @@ const postArticle = async (data) => {
     }
 };
 
-module.exports = { getArticleById, getArticle, postArticle };
+const deleteById = async (id) => {
+    console.log("delete article by id ->", id);
+    return new Promise((resolve, reject) => {
+        pool.query(`DELETE FROM article WHERE id = ?`, [id], (err, result) => {
+            if (!err) {
+                resolve(result);
+            } else {
+                reject(err);
+            }
+        });
+    });
+};
+
+module.exports = { getArticleById, getArticle, postArticle, deleteById };

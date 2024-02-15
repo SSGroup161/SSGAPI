@@ -2,6 +2,7 @@ const {
     getArticle,
     getArticleById,
     postArticle,
+    deleteById,
 } = require("../model/articleModel");
 require("dotenv").config();
 const xss = require("xss");
@@ -130,6 +131,47 @@ const brandController = {
                 status: 500,
                 message: "Internal server error",
             });
+        }
+    },
+    deleteDataById: async (req, res, next) => {
+        try {
+            const { id } = req.params;
+
+            if (
+                !id ||
+                !id.match(
+                    /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/
+                )
+            ) {
+                return res
+                    .status(400)
+                    .json({ status: 400, message: "Invalid ID format" });
+            }
+
+            const dataArticle = await getArticleById(id);
+            if (!dataArticle) {
+                return res
+                    .status(404)
+                    .json({ status: 404, message: "Article not found" });
+            }
+
+            await cloudinary.uploader.destroy(dataArticle.public_id);
+
+            const result = await deleteById(id);
+            if (!result || result.affectedRows === 0 || result.rowCount === 0) {
+                // Sesuaikan dengan DBMS yang digunakan
+                return res
+                    .status(404)
+                    .json({ status: 404, message: "Failed to delete article" });
+            }
+
+            res.status(200).json({
+                status: 200,
+                message: "Article deleted successfully",
+            });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({ status: 500, message: err.message });
         }
     },
 };
