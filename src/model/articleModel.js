@@ -81,4 +81,54 @@ const deleteById = async (id) => {
     }
 };
 
-module.exports = { getArticleById, getArticle, postArticle, deleteById };
+const putArticle = async (data, id) => {
+    const {
+        title,
+        creator,
+        day,
+        date,
+        link_img,
+        caption_img,
+        description,
+        place,
+        public_id,
+    } = data;
+    console.log("model putArticle");
+    console.log(data);
+    try {
+        const queryString = `
+            UPDATE article
+            SET title = ?, creator = ?, day = ?, date = ?, link_img = ?, caption_img = ?, description = ?, place = ?, public_id = ?
+            WHERE id = ?`;
+        const values = [
+            title || null,
+            creator || null,
+            day || null,
+            date || null,
+            link_img || null,
+            caption_img || null,
+            description || null,
+            place || null,
+            public_id || null,
+            id,
+        ];
+
+        const [result] = await pool.execute(queryString, values);
+
+        if (result.affectedRows === 0) {
+            throw new Error(`Artikel dengan ID ${id} tidak ditemukan.`);
+        }
+        return result;
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+};
+
+module.exports = {
+    getArticleById,
+    getArticle,
+    postArticle,
+    deleteById,
+    putArticle,
+};

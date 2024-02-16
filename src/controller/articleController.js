@@ -3,6 +3,7 @@ const {
     getArticleById,
     postArticle,
     deleteById,
+    putArticle,
 } = require("../model/articleModel");
 require("dotenv").config();
 const xss = require("xss");
@@ -51,7 +52,6 @@ const brandController = {
     postData: async (req, res, next) => {
         try {
             const {
-                id,
                 title,
                 creator,
                 day,
@@ -133,7 +133,7 @@ const brandController = {
             });
         }
     },
-    deleteDataById: (req, res, next) => {
+    deleteDataById: async (req, res, next) => {
         const { id } = req.params;
 
         if (
@@ -155,11 +155,9 @@ const brandController = {
                         .json({ status: 404, message: "Article not found" });
                 }
 
-                // Langkah 1: Hapus gambar di Cloudinary
                 return cloudinary.uploader.destroy(dataArticle.public_id);
             })
             .then(() => {
-                // Langkah 2: Hapus artikel dari database
                 return deleteById(id);
             })
             .then((result) => {
@@ -171,7 +169,6 @@ const brandController = {
                     throw new Error("Failed to delete article");
                 }
 
-                // Langkah 3: Kirim respons sukses setelah semua operasi selesai
                 res.status(200).json({
                     status: 200,
                     message: "Article deleted successfully",
@@ -184,6 +181,86 @@ const brandController = {
                     message: err.message || "Internal server error",
                 });
             });
+    },
+    putData: async (req, res, next) => {
+        try {
+            const { id } = req.params;
+            const {
+                title,
+                creator,
+                day,
+                date,
+                caption_img,
+                description,
+                place,
+            } = req.body;
+
+            if (
+                !id ||
+                !id.match(
+                    /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/
+                )
+            ) {
+                return res
+                    .status(400)
+                    .json({ status: 400, message: "Invalid ID format" });
+            }
+
+            const dataArticle = await getArticleById(id);
+
+            console.log("put data");
+            console.log(dataArticle);
+
+            const data = {
+                title: title ? xss(title) : dataArticle.title,
+                creator: creator ? xss(creator) : dataArticle.creator,
+                day: day || dataArticle.day,
+                date: date || dataArticle.date,
+                caption_img: caption_img
+                    ? xss(caption_img)
+                    : dataArticle.caption_img,
+                description: description
+                    ? xss(description)
+                    : dataArticle.description,
+                place: place ? xss(place) : dataArticle.place,
+                link_img: dataArticle.link_img,
+                public_id: dataArticle.public_id,
+            };
+
+            if (req.file) {
+                const result = await cloudinary.uploader.upload(req.file.path, {
+                    use_filename: true,
+                    folder: "SSG/Article",
+                });
+
+                if (dataArticle.public_id) {
+                    await cloudinary.uploader.destroy(dataArticle.public_id);
+                }
+
+                data.link_img = result.secure_url;
+                data.public_id = result.public_id;
+            } else if (dataArticle.link_img && !req.file) {
+                data.link_img = dataArticle.link_img;
+                data.public_id = dataArticle.public_id;
+            }
+
+            const result = await putArticle(data, id);
+            console.log(result);
+
+            delete data.id;
+
+            res.status(200).json({
+                status: 200,
+                message: "Update data article success",
+                data,
+            });
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({
+                status: 500,
+                message: "Internal server error",
+            });
+        }
     },
 };
 
