@@ -95,10 +95,24 @@ const contactController = {
             console.log("post data");
             console.log(name, email, message);
 
-            if (!name || !email || !message) {
+            if (!name.trim() || !email.trim() || !message.trim()) {
                 return res.status(400).json({
                     status: 400,
-                    message: "input name, email, message required",
+                    message: "Name, email, and message are required",
+                });
+            }
+
+            if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+                return res.status(400).json({
+                    status: 400,
+                    message: "Invalid email format",
+                });
+            }
+
+            if (!message.trim()) {
+                return res.status(400).json({
+                    status: 400,
+                    message: "Message must not be empty",
                 });
             }
 
