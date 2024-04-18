@@ -199,21 +199,27 @@ const brandController = {
             } = req.body;
             const id_title = title.toLowerCase().replace(/\s+/g, "-");
 
-            if (
-                !id ||
-                !id.match(
-                    /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/
-                )
-            ) {
-                return res
-                    .status(400)
-                    .json({ status: 400, message: "Invalid ID format" });
-            }
+            // if (
+            //     !id ||
+            //     !id.match(
+            //         /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/
+            //     )
+            // ) {
+            //     return res
+            //         .status(400)
+            //         .json({ status: 400, message: "Invalid ID format" });
+            // }
 
             const dataArticle = await getArticleById(id);
 
             console.log("put data");
             console.log(dataArticle);
+
+            if (id !== dataArticle.id_title) {
+                return res
+                    .status(400)
+                    .json({ status: 400, message: "ID Not Found" });
+            }
 
             const data = {
                 id_title: id_title ? xss(id_title) : dataArticle.id_title,
@@ -249,7 +255,7 @@ const brandController = {
                 data.public_id = dataArticle.public_id;
             }
 
-            const result = await putArticle(data, id);
+            const result = await putArticle(data, dataArticle.id);
             console.log(result);
 
             delete data.id;
