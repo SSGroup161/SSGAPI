@@ -3,7 +3,7 @@ const pool = require("../config/db");
 const getArticleById = async (id) => {
     console.log("model getArticleById");
     try {
-        const query = "SELECT * FROM article WHERE id = ?";
+        const query = "SELECT * FROM article WHERE id_title = ?";
         const [rows] = await pool.execute(query, [id]);
 
         if (rows.length === 0) {
@@ -32,6 +32,7 @@ const getArticle = async () => {
 const postArticle = async (data) => {
     const {
         id,
+        id_title,
         title,
         creator,
         day,
@@ -45,9 +46,10 @@ const postArticle = async (data) => {
     console.log("model postArticle");
     try {
         const queryString =
-            "INSERT INTO article (id, title, creator, day, date, link_img, caption_img, description, place, public_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            "INSERT INTO article (id, id_title, title, creator, day, date, link_img, caption_img, description, place, public_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         const values = [
             id,
+            id_title,
             title,
             creator,
             day,
@@ -83,6 +85,7 @@ const deleteById = async (id) => {
 
 const putArticle = async (data, id) => {
     const {
+        id_title,
         title,
         creator,
         day,
@@ -98,9 +101,10 @@ const putArticle = async (data, id) => {
     try {
         const queryString = `
             UPDATE article
-            SET title = ?, creator = ?, day = ?, date = ?, link_img = ?, caption_img = ?, description = ?, place = ?, public_id = ?
+            SET id_title= ?, title = ?, creator = ?, day = ?, date = ?, link_img = ?, caption_img = ?, description = ?, place = ?, public_id = ?
             WHERE id = ?`;
         const values = [
+            id_title || null,
             title || null,
             creator || null,
             day || null,

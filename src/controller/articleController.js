@@ -102,9 +102,12 @@ const brandController = {
                 folder: "SSG/Article",
             });
 
+            const id_title = title.toLowerCase().replace(/\s+/g, "-");
+
             console.log("data");
             const data = {
                 id: uuid,
+                id_title: xss(id_title),
                 title: xss(title),
                 creator: xss(creator),
                 day: xss(day),
@@ -122,7 +125,7 @@ const brandController = {
 
             res.status(200).json({
                 status: 200,
-                message: "Message has been sent!",
+                message: "Article has been added!",
                 data,
             });
         } catch (err) {
@@ -194,6 +197,7 @@ const brandController = {
                 description,
                 place,
             } = req.body;
+            const id_title = title.toLowerCase().replace(/\s+/g, "-");
 
             if (
                 !id ||
@@ -212,6 +216,7 @@ const brandController = {
             console.log(dataArticle);
 
             const data = {
+                id_title: id_title ? xss(id_title) : dataArticle.id_title,
                 title: title ? xss(title) : dataArticle.title,
                 creator: creator ? xss(creator) : dataArticle.creator,
                 day: day || dataArticle.day,
