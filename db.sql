@@ -109,4 +109,10 @@ MODIFY COLUMN `description` VARCHAR(50000);
 
 DROP TABLE users;
 
-SELECT * FROM users;
+SELECT * FROM article;
+
+ALTER TABLE article
+ADD COLUMN id_title VARCHAR(255) NOT NULL AFTER id;
+
+ALTER TABLE article
+ADD PRIMARY KEY (id);
