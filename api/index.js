@@ -3,7 +3,7 @@ require("dotenv").config();
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const cors = require("cors");
-const Router = require("./src/router");
+const Router = require("../src/router");
 const helmet = require("helmet");
 const path = require("path");
 
