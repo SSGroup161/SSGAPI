@@ -2,13 +2,13 @@
     "name": "ssgapi",
     "version": "1.0.0",
     "description": "",
-    "main": "index.js",
+    "main": "app.js",
     "engines": {
         "node": "20.x"
     },
     "scripts": {
-        "start": "node index.js",
-        "dev": "nodemon index.js",
+        "start": "node app",
+        "dev": "nodemon app",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "Arif F",
@@ -32,6 +32,7 @@
         "nodemon": "^3.0.2",
         "path": "^0.12.7",
         "uuid": "^9.0.1",
+        "vercel": "^34.1.1",
         "xss": "^1.0.14",
         "zod": "^3.22.4"
     },
